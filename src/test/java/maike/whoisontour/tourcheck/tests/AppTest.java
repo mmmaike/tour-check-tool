@@ -1,4 +1,4 @@
-package com.ichhabkeinewebsite.maike.xontour;
+package maike.whoisontour.tourcheck.tests;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
