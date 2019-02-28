@@ -17,7 +17,7 @@ import maike.whoisontour.tourcheck.ticketmasterapi.datamodel.EventResponse;
 
 
 public class EventLookUp {
-	private static final String apiKey = "3fDTpsQV0vdUfRLEAwraQQ0ZGn2yotfy";
+	private static final String apiKey = "<YOUR_API_KEY>";
 	private static final String baseURL = "https://app.ticketmaster.com/discovery/v2/";
 	private static final String keyPrefix = "?apikey=";
 	private static final String countryCode = "&countryCode=DE";
