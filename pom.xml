@@ -4,8 +4,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.ichhabkeinewebsite.maike</groupId>
-	<artifactId>xontour</artifactId>
+	<groupId>maike.whoisontour.tourcheck</groupId>
+	<artifactId>TourCheck</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
@@ -27,7 +27,7 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>${jackson.version}</version>
+			<version>[2.9.8,)</version>
 		</dependency>
 
 		<dependency>
