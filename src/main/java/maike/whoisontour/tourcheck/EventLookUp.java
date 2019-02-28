@@ -38,6 +38,7 @@ public class EventLookUp {
 		
 		try {
 			url = new URL(urlString);
+			System.out.println(url);
 			
 		} catch(MalformedURLException e) {
 			e.printStackTrace();
