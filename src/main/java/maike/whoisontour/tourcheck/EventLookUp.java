@@ -12,86 +12,80 @@ import maike.whoisontour.tourcheck.ticketmasterapi.datamodel.AttractionResponse;
 import maike.whoisontour.tourcheck.ticketmasterapi.datamodel.Event;
 import maike.whoisontour.tourcheck.ticketmasterapi.datamodel.EventResponse;
 
-public class EventLookUp {
-    private static final String baseURL = "https://app.ticketmaster.com/discovery/v2/";
-    private static final String keyPrefix = "?apikey=";
-    private static final String countryCode = "&countryCode=DE";
-    private static final String events = "events";
-    private static final String attractions = "attractions";
-    private static final String attractionIdPrefix = "&attractionId=";
-    private static final String keyword = "&keyword=";
+class EventLookUp {
+	private static final String baseURL = "https://app.ticketmaster.com/discovery/v2/";
+	private static final String keyPrefix = "?apikey=";
+	private static final String countryCode = "&countryCode=DE";
+	private static final String events = "events";
+	private static final String attractions = "attractions";
+	private static final String attractionIdPrefix = "&attractionId=";
+	private static final String keyword = "&keyword=";
 
-    private static ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    private ApiKeyProvider keyProvider = new ApiKeyProvider();
+	private static ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+	private ApiKeyProvider keyProvider = new ApiKeyProvider();
 
-    private URL buildApiRequest(String type, String artistID, String artistName) {
-        URL url = null;
-        String urlString = baseURL + type + keyPrefix + keyProvider.getApiKey();
-        if (artistID != null) {
-            urlString += attractionIdPrefix + artistID + countryCode;
-        }
-        if (type.equals(attractions)) {
-            urlString += keyword + artistName;
-        }
+	void lookUpEvents(String artistName, String artistID) {
 
-        try {
-            url = new URL(urlString);
-            System.out.println(url);
+		URL url = buildApiRequest(events, artistID, artistName);
+		try {
+			EventResponse response = mapper.readValue(url, EventResponse.class);
+			if (response.getEmbedded() == null) {
+				System.out.println("No upcoming events for " + artistName);
+				return;
+			}
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+			System.out.println("Events for " + artistName + " in Germany:");
 
-        return url;
-    }
+			for (Event event : response.getEmbedded().getEvents()) {
+				System.out.println(event.getEmbedded().getVenues().get(0).getCity().getName() + " on "
+					+ event.getDates().getStart().getLocalDate());
+			}
 
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-    public void lookUpEvents(String artistName, String artistID) {
+	Artist findArtistID(String artist) {
+		URL url = null;
+		Artist relevantArtist = null;
+		try {
+			url = buildApiRequest(attractions, null, artist);
 
-        URL url = buildApiRequest(events, artistID, artistName);
-        try {
-            EventResponse response = mapper.readValue(url, EventResponse.class);
-            if (response.getEmbedded() == null) {
-                System.out.println("No upcoming events for " + artistName);
-                return;
-            }
+			AttractionResponse response = mapper.readValue(url, AttractionResponse.class);
+			if (response.getEmbedded() == null) {
+				System.out.println("Artist not found");
+				return null;
+			}
 
-            System.out.println("Events for " + artistName + " in Germany:");
+			relevantArtist = new Artist(response.getEmbedded().getAttractions().get(0).getName(),
+				response.getEmbedded().getAttractions().get(0).getId());
 
-            for (Event event : response.getEmbedded().getEvents()) {
-                System.out.println(event.getEmbedded().getVenues().get(0).getCity().getName() + " on "
-                        + event.getDates().getStart().getLocalDate());
-            }
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+		return relevantArtist;
+	}
 
-    }
+	private URL buildApiRequest(String type, String artistID, String artistName) {
+		URL url = null;
+		String urlString = baseURL + type + keyPrefix + keyProvider.getApiKey();
+		if (artistID != null) {
+			urlString += attractionIdPrefix + artistID + countryCode;
+		}
+		if (type.equals(attractions)) {
+			urlString += keyword + artistName;
+		}
 
-    public Artist findArtistID(String artist) {
-        URL url = null;
-        Artist relevantArtist = null;
-        try {
-            url = buildApiRequest(attractions, null, artist);
+		try {
+			url = new URL(urlString);
+			System.out.println(url);
 
-            AttractionResponse response = mapper.readValue(url, AttractionResponse.class);
-            if (response.getEmbedded() == null) {
-                System.out.println("Artist not found");
-                return null;
-            }
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
 
-
-            relevantArtist = new Artist(response.getEmbedded().getAttractions().get(0).getName(),
-                    response.getEmbedded().getAttractions().get(0).getId());
-
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return relevantArtist;
-    }
+		return url;
+	}
 }
