@@ -13,7 +13,6 @@ import maike.whoisontour.tourcheck.ticketmasterapi.datamodel.Event;
 import maike.whoisontour.tourcheck.ticketmasterapi.datamodel.EventResponse;
 
 public class EventLookUp {
-    private static final String apiKey = "<YOUR_API_KEY>";
     private static final String baseURL = "https://app.ticketmaster.com/discovery/v2/";
     private static final String keyPrefix = "?apikey=";
     private static final String countryCode = "&countryCode=DE";
@@ -23,10 +22,11 @@ public class EventLookUp {
     private static final String keyword = "&keyword=";
 
     private static ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    private ApiKeyProvider keyProvider = new ApiKeyProvider();
 
     private URL buildApiRequest(String type, String artistID, String artistName) {
         URL url = null;
-        String urlString = baseURL + type + keyPrefix + apiKey;
+        String urlString = baseURL + type + keyPrefix + keyProvider.getApiKey();
         if (artistID != null) {
             urlString += attractionIdPrefix + artistID + countryCode;
         }
