@@ -22,7 +22,11 @@ class EventLookUp {
 	private static final String keyword = "&keyword=";
 
 	private static ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-	private ApiKeyProvider keyProvider = new ApiKeyProvider();
+	private ApiKeyProvider keyProvider;
+
+	EventLookUp(final ApiKeyProvider keyProvider) {
+		this.keyProvider = keyProvider;
+	}
 
 	void lookUpEvents(String artistName, String artistID) {
 
@@ -68,7 +72,7 @@ class EventLookUp {
 		return relevantArtist;
 	}
 
-	private URL buildApiRequest(String type, String artistID, String artistName) {
+	URL buildApiRequest(String type, String artistID, String artistName) {
 		URL url = null;
 		String urlString = baseURL + type + keyPrefix + keyProvider.getApiKey();
 		if (artistID != null) {
