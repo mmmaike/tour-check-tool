@@ -12,7 +12,7 @@ import maike.whoisontour.tourcheck.ticketmasterapi.datamodel.AttractionResponse;
 import maike.whoisontour.tourcheck.ticketmasterapi.datamodel.Event;
 import maike.whoisontour.tourcheck.ticketmasterapi.datamodel.EventResponse;
 
-class EventLookUp {
+class TicketMasterClient {
 	private static final String baseURL = "https://app.ticketmaster.com/discovery/v2/";
 	private static final String keyPrefix = "?apikey=";
 	private static final String countryCode = "&countryCode=DE";
@@ -24,7 +24,7 @@ class EventLookUp {
 	private static ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	private ApiKeyProvider keyProvider;
 
-	EventLookUp(final ApiKeyProvider keyProvider) {
+	TicketMasterClient(final ApiKeyProvider keyProvider) {
 		this.keyProvider = keyProvider;
 	}
 

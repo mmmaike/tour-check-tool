@@ -8,7 +8,7 @@ import java.net.URL;
 
 import org.junit.Test;
 
-public class EventLookUpTest {
+public class TicketMasterClientTest {
 
 	@Test
 	public void buildApiRequest() {
@@ -16,10 +16,10 @@ public class EventLookUpTest {
 		ApiKeyProvider apiKeyProvider = mock(ApiKeyProvider.class);
 		when(apiKeyProvider.getApiKey()).thenReturn("foo");
 
-		EventLookUp eventLookUp = new EventLookUp(apiKeyProvider);
+		TicketMasterClient ticketMasterClient = new TicketMasterClient(apiKeyProvider);
 
 		// when
-		URL result = eventLookUp.buildApiRequest("type", "666", "slayer");
+		URL result = ticketMasterClient.buildApiRequest("type", "666", "slayer");
 
 		// then
 		assertThat(result.toString()).isEqualTo("https://app.ticketmaster.com/discovery/v2/type?apikey=foo&attractionId=666&countryCode=DE");
